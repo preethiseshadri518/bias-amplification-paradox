@@ -1,7 +1,7 @@
 # Running Face Detection
 ## Installing MediaPipe
 
-To perform face detection, you need to install [mediapipe]([https://pypi.org/project/mediapipe/](https://developers.google.com/mediapipe/api/solutions)):
+To perform face detection, you need to install [mediapipe]([https://pypi.org/project/mediapipe/](https://developers.google.com/mediapipe/api/solutions):
 ```bash
 pip install mediapipe
 ```
