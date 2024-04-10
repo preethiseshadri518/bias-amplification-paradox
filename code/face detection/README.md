@@ -10,13 +10,15 @@ pip install mediapipe
 
 You will also need to install the following:
 ```bash
+pip install transformers
+pip install torch
 pip install numpy
 pip install pandas
 pip install pillow
 ```
 
 ## Running the script
-To run the face detection script, specify a directory with images (e.g. 'images/') and a CSV file to save face detection labels (e.g. 'labels.csv')
+To run the face detection script, specify a directory with images (e.g. 'images/') and a CSV file to save face detection labels and gender predictions (e.g. 'labels.csv'). We only compute gender predictions for images in which we detect a clear face (i.e. labeled as 'filtered').
 ```bash
 python face_detection.py image_directory label_filename
 ```
