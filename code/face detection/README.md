@@ -1,4 +1,4 @@
-# Running Face Detection
+# Running Face Detection and Inferring Perceived Gender
 ## Installing MediaPipe
 
 To perform face detection, you need to install [mediapipe](https://developers.google.com/mediapipe/api/solutions):
