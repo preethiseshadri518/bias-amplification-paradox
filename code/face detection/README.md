@@ -22,4 +22,4 @@ To run the face detection script, specify a directory with images (e.g. 'images/
 ```bash
 python face_detection.py image_directory label_filename
 ```
-You may want to only consider gender predictions that have predicted probabilities within a certain threshold, so that only highly confident predictions are included (e.g. predicted probability is <0.1 and >0.9) -- you can decide what this threshold should be for your specific use case.
+You may want to only consider gender predictions that have predicted probabilities within a certain threshold, so that only highly confident predictions are included (e.g. predicted probability  of female is <0.1 or >0.9) -- you can decide what this threshold should be for your specific use case.
