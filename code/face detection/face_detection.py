@@ -1,3 +1,5 @@
+from transformers import CLIPProcessor, CLIPModel
+import torch
 import mediapipe as mp
 from PIL import Image
 import numpy as np
@@ -14,6 +16,9 @@ image_directory = args.image_directory
 label_filename = args.label_filename
 
 mp_face_detection = mp.solutions.face_detection
+clip_model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14")
+clip_model = clip_model.to('cuda')
+clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
 
 # default values
 min_confidence = 0.5
@@ -34,23 +39,43 @@ def detect_faces(img, min_confidence=0.5, min_height=0.1, min_width=0.1):
                 return 'small_face'
             else:
                 return 'filtered' # images that we want to save
+       
+    
+def infer_gender(image):
+    text = ["A photo of a man", "A photo of a woman"]
+        
+    inputs = clip_processor(text=text, images=image, return_tensors="pt", padding=True)
+    with torch.no_grad():
+        # outputs = clip_model(**inputs)
+        outputs = clip_model(**inputs.to('cuda'))
+    logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
+    probs = logits_per_image.softmax(dim=1)
+    return probs.detach().cpu().numpy()[0,1] # returns probability female
+
 
 def main():
     start_time = time.time()
     files = glob.glob(f'{image_directory}/*')
 
-    labels = []
+    labels, probs = [], []
     for file in files:
         img = Image.open(file)
         label = detect_faces(img, min_confidence=min_confidence, min_height=min_height, min_width=min_width)
+        if label == 'filtered': # only compute gender predictions for cases with clear faces
+            prob = infer_gender(img)
+        else:
+            prob = -1 
         labels.append(label)
+        probs.append(prob) 
 
     df = pd.DataFrame({
         'file': files,
-        'label': labels
+        'label': labels,
+        'probs': probs
     })
     df.to_csv(label_filename, index=False)
     print('time:', time.time()-start_time)
 
+    
 if __name__ == '__main__':
     main() 
